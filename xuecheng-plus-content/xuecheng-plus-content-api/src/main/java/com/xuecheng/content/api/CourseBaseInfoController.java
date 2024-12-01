@@ -1,8 +1,10 @@
 package com.xuecheng.content.api;
 
 import com.xuecheng.base.exception.ValidationGroups;
+import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
+import com.xuecheng.content.feignclient.MediaServiceClient;
 import com.xuecheng.content.mapper.CourseBaseMapper;
 import com.xuecheng.content.mapper.CourseTestMapper;
 import com.xuecheng.content.model.dto.AddCourseDto;
@@ -19,8 +21,11 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * @description 课程信息管理
@@ -103,6 +108,31 @@ public class CourseBaseInfoController {
 //        return courseBaseInfoService.createCourseBase(companyId,addCourseDto);
 //    }
 
+    @Resource
+    private MediaServiceClient mediaServiceClient;
 
+    @Resource
+    private CourseBaseMapper courseBaseMapper;
+    @PostMapping("/course/test")
+    @Transactional
+    public String test(){
+
+        try {
+           //修改基本表
+           CourseBase courseBase = courseBaseMapper.selectById(1);
+           courseBase.setCompanyName("00000000000000");//实践是检验真理的唯一标准
+           courseBaseMapper.updateById(courseBase);
+
+           String test = mediaServiceClient.test();
+           System.out.println("============");
+           return test;
+
+        }catch (Exception e){
+           e.printStackTrace();
+           System.out.println("2222222222222222");
+           throw new XueChengPlusException("远程调用失败");
+       }
+
+    }
 
 }

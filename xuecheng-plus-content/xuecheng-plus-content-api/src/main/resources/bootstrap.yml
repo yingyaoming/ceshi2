@@ -8,18 +8,6 @@ spring:
     url: jdbc:mysql://192.168.101.65:3306/xc148_content?serverTimezone=UTC&userUnicode=true&useSSL=false&
     username: root
     password: mysql
-xxl:
-  job:
-    admin:
-      addresses: http://192.168.101.65:8088/xxl-job-admin
-    executor:
-      appname: coursepublish-job
-      address:
-      ip:
-      port: 8999
-      logpath: /data/applogs/xxl-job/jobhandler
-      logretentiondays: 30
-    accessToken: default_token
   redis:
     host: 192.168.101.65
     port: 6379
@@ -28,14 +16,16 @@ xxl:
     database: 1
     lettuce:
       shutdown-timeout: 100
+  profiles:
+    active: dev
   cloud:
     nacos:
       server-addr: 192.168.101.65:8848
       discovery:
-        namespace: dev148
+        namespace: 139cb203-ceb2-4115-a213-f98b039cab84
         group: xuecheng-plus-project
       config:
-        namespace: dev148
+        namespace: 139cb203-ceb2-4115-a213-f98b039cab84
         group: xuecheng-plus-project
         file-extension: yaml
         refresh-enabled: true
@@ -60,14 +50,19 @@ xxl:
             group: xuecheng-plus-common
             refresh: true
   #profiles默认为dev
-  profiles:
-    active: dev
 
-test_config:
-  a: 4a
-  b: 4b
-  c: 4c
-  d: 4d
+xxl:
+  job:
+    admin:
+      addresses: http://192.168.101.65:8088/xxl-job-admin
+    executor:
+      appname: coursepublish-job
+      address:
+      ip:
+      port: 8999
+      logpath: /data/applogs/xxl-job/jobhandler
+      logretentiondays: 30
+    accessToken: default_token
 # 日志文件配置路径
 #logging:
 #  config: classpath:log4j2-dev.xml
@@ -79,4 +74,10 @@ test_config:
 #  description: "内容系统管理系统对课程相关信息进行业务管理数据"
 #  base-package: com.xuecheng
 #  enabled: true
+logging:
+  level:
+    com.alibaba.nacos: INFO
+server:
+  servlet:
+    context-path: /content
 #  version: 1.0.0

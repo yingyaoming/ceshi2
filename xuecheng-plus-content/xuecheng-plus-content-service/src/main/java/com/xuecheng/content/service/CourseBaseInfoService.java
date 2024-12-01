@@ -62,4 +62,6 @@ public interface CourseBaseInfoService {
   */
  public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto dto);
 
+  public String test1();
+
 }

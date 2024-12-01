@@ -1,6 +1,16 @@
 spring:
   application:
     name: content-service
+  redis:
+    host: 192.168.101.65
+    port: 6379
+    password: redis
+    timeout: 60000
+    database: 1
+    lettuce:
+      shutdown-timeout: 100
+    profiles:
+      active: dev
   cloud:
     nacos:
       server-addr: 192.168.101.65:8848
@@ -8,7 +18,7 @@ spring:
         namespace: dev148
         group: xuecheng-plus-project
       config:
-        namespace: dev148
+        namespace: 139cb203-ceb2-4115-a213-f98b039cab84
         group: xuecheng-plus-project
         file-extension: yaml
         refresh-enabled: true
@@ -22,9 +32,6 @@ spring:
           - data-id: feign-${spring.profiles.active}.yaml
             group: xuecheng-plus-common
             refresh: true
-  #profiles默认为dev
-  profiles:
-    active: dev
 
 
 #  datasource:

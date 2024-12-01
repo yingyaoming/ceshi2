@@ -280,4 +280,30 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
 
     }
 
+    public String test1(){
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "测试1完成了";
+    }
+
+    public void test2(){
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        int i = 2/0;
+        //return "测试2完成了";
+    }
+    public String test3(){
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return "测试3完成了";
+    }
 }
