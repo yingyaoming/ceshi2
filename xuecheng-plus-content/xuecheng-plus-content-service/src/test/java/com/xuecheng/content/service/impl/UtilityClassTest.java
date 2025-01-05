@@ -143,4 +143,11 @@ public class UtilityClassTest {
         String s = UtilityClass.staticMethod();
         System.out.println(s);
     }
+    @Test
+    public void  staticMethod6() {
+
+        PowerMockito.when(UtilityClass.staticMethod()).thenReturn("哈哈");
+        String s = UtilityClass.staticMethod();
+        System.out.println(s);
+    }
 }
