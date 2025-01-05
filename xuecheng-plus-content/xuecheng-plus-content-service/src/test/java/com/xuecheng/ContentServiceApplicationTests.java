@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,8 +30,10 @@ class ContentServiceApplicationTests {
     CourseCategoryMapper courseCategoryMapper;
 
     @Test
+    @Transactional
     void testCourseBaseMapper() {
         CourseBase courseBase = courseBaseMapper.selectById(22);
+        CourseBase courseBase1 = courseBaseMapper.selectById(22);
         Assertions.assertNotNull(courseBase);
     }
     @Test

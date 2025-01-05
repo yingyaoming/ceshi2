@@ -1,5 +1,6 @@
 package com.xuecheng;
 
+import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.content.mapper.CourseBaseMapper;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.service.impl.CourseBaseInfoServiceImpl;
@@ -11,8 +12,10 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @SpringBootTest
 public class CourseBaseMapperTest {
@@ -61,7 +64,6 @@ public class CourseBaseMapperTest {
             }
         });
         CompletableFuture<String> stringCompletableFuture3 = CompletableFuture.supplyAsync(() -> baseInfoService.test3());
-
         CompletableFuture.runAsync(() -> baseInfoService.test1());
         CompletableFuture.allOf(stringCompletableFuture1, stringCompletableFuture3);
         try {
@@ -75,12 +77,83 @@ public class CourseBaseMapperTest {
             System.out.println("异常已经捕获");
             throw new RuntimeException("哈哈哈哈");
         }
-
+        String s = "";
         long end = System.currentTimeMillis();
         System.out.println("程序执行花费了" + (end - begin));
         //System.out.println(test1 + test2 + test3);
     }
 
+    @Test
+    public void test3()  {
+        CourseBaseInfoServiceImpl baseInfoService = new CourseBaseInfoServiceImpl();
+        long begin = System.currentTimeMillis();
+        CompletableFuture<CompletableFuture<String>> completableFutureCompletableFuture = CompletableFuture.supplyAsync(() -> {
+            return baseInfoService.test1();
+        }).whenComplete((result, ex) -> {
+            if (ex != null) {
+                // 记录异常信息
+                System.out.println(result);
+            } else {
+                // 正常完成后的处理
+                System.out.println("开始了");
+                System.out.println(result);
+                System.out.println("结束了");
+            }
+        }).thenApply((item) -> {
+            System.out.println("第二段");
+            return CompletableFuture.supplyAsync(() -> baseInfoService.test3());
+        });
+
+
+        try {
+            System.out.println("第三段");
+            System.out.println(completableFutureCompletableFuture.get());
+
+        } catch (Exception e) {
+            e.getStackTrace();
+            System.out.println(e.getMessage());
+            System.out.println("异常已经捕获");
+            throw new RuntimeException("哈哈哈哈");
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("程序执行花费了" + (end - begin));
+        //System.out.println(test1 + test2 + test3);
+    }
+
+
+    @Test
+    public void test4()  {
+        CourseBaseInfoServiceImpl baseInfoService = new CourseBaseInfoServiceImpl();
+        long begin = System.currentTimeMillis();
+        CompletableFuture<String> stringCompletableFuture = CompletableFuture.supplyAsync(() -> baseInfoService.test1())
+                .whenComplete((result, ex) -> {
+                    if (ex != null) {
+                        // 记录异常信息
+                        System.out.println("test1出现异常");
+                    } else {
+                        // 正常完成后的处理
+                        System.out.println("开始了");
+                        System.out.println(result);
+                        System.out.println("结束了");
+                    }
+                }).thenApply((item) -> {
+                    System.out.println("item是" + item);
+                    return baseInfoService.test3();
+                });
+
+        try {
+            System.out.println(stringCompletableFuture.get());
+
+        } catch (Exception e) {
+            e.getStackTrace();
+            System.out.println(e.getMessage());
+            System.out.println("异常已经捕获");
+            throw new RuntimeException("哈哈哈哈");
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("程序执行花费了" + (end - begin));
+        //System.out.println(test1 + test2 + test3);
+    }
     /*@Test
     public void test3() throws ExecutionException, InterruptedException {
         CourseBaseInfoServiceImpl baseInfoService = new CourseBaseInfoServiceImpl();
